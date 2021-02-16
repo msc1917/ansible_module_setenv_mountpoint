@@ -1,0 +1,9 @@
+---
+- name: Mount Filesystems
+  ansible.posix.mount:
+    path:   {item.mountpoint}
+    src:    {item.device}
+    fstype: {item.fstype}
+    state:  present
+  with_items: 
+    - {filesystems}
