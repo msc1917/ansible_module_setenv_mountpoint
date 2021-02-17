@@ -1,3 +1,4 @@
 ---
 dependencies:
   - role: setenv_filesystem
+  - role: setenv_paths

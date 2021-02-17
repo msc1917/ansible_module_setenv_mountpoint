@@ -1,9 +1,37 @@
 ---
+- name: Create Mount-directories
+  ansible.builtin.file:
+    path: "{{ item.mountpoint }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  become: yes
+  with_items: 
+    - "{{ filesystems }}"
+  when:
+    - filesystems is defined
+
 - name: Mount Filesystems
   ansible.posix.mount:
-    path:   {item.mountpoint}
-    src:    {item.device}
-    fstype: {item.fstype}
-    state:  present
+    path:   "{{ item.mountpoint }}"
+    src:    "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+    state:  mounted
+  become: yes
   with_items: 
-    - {filesystems}
+    - "{{ filesystems }}"
+  when:
+    - filesystems is defined
+
+- name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: "{{ item.mountpoint }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  become: yes
+  with_items: 
+    - "{{ filesystems }}"
+  when:
+    - filesystems is defined
